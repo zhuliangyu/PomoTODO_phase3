@@ -41,31 +41,67 @@ public class Task {
     // EFFECTS: creates a tag with name tagName and adds it to this task
     //  throws EmptyStringException if tagName is null or empty
     // Note: no two tags are to have the same name
-    public void addTag(String tagName) {
-        addTag(new Tag(tagName));
+    public void addTag(String tagName) throws EmptyStringException {
+
+        //TODO
+
+        if (tagName.isEmpty() || tagName == null) {
+            throw new EmptyStringException();
+        } else {
+            addTag(new Tag(tagName));
+        }
     }
-    
+
+
     // MODIFIES: this
     // EFFECTS: adds tag to this task if it is not already exist
     //  throws NullArgumentException if tag is null
-    public void addTag(Tag tag) {
-        // stub
+    public void addTag(Tag tag) throws NullArgumentException {
+
+        //TODO
+
+        if (tag == null) {
+            throw new NullArgumentException();
+        } else if (!tags.contains(tag)) {
+            tags.add(tag);
+            tag.addTask(this);
+        }
+
+
     }
-    
+
     // MODIFIES: this
     // EFFECTS: removes the tag with name tagName from this task
     //  throws EmptyStringException if tagName is empty or null
-    public void removeTag(String tagName) {
-        removeTag(new Tag(tagName));
+    public void removeTag(String tagName) throws EmptyStringException {
+
+        //TODO
+
+        if (tagName == null || tagName.isEmpty()) {
+            throw new EmptyStringException();
+        } else {
+            removeTag(new Tag(tagName));
+        }
     }
-    
+
     // MODIFIES: this
     // EFFECTS: removes tag from this task
     //  throws NullArgumentException if tag is null
-    public void removeTag(Tag tag) {
-        // stub
+    public void removeTag(Tag tag) throws NullArgumentException {
+
+        //TODO
+
+        if (tag == null) {
+            throw new NullArgumentException();
+        } else if (tags.contains(tag)) {
+            tag.removeTask(this);
+            tags.remove(tag);
+
+        }
+
+
     }
-    
+
     // EFFECTS: returns an unmodifiable set of tags
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
@@ -138,7 +174,7 @@ public class Task {
         }
         return containsTag(new Tag(tagName));
     }
-    
+
     // EFFECTS: returns true if task contains this tag,
     //     returns false otherwise
     //  throws NullArgumentException if tag is null
@@ -182,7 +218,7 @@ public class Task {
         output.append("\n\tTags: " + tagsToString(new ArrayList<Tag>(getTags())));
         output.append("\n}");
         return output.toString();
-    
+
     }
 
     // EFFECTS: returns a string containing a comma-separated list of tags,
@@ -198,5 +234,25 @@ public class Task {
             output.append(" ");
         }
         return output.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Task task = (Task) o;
+        return Objects.equals(description, task.description)
+                && Objects.equals(dueDate, task.dueDate)
+                && Objects.equals(priority, task.priority)
+                && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, dueDate, priority, status);
     }
 }
