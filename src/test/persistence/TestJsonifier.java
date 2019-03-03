@@ -106,13 +106,13 @@ public class TestJsonifier {
         assertEquals(59, Jsonifier.dueDateToJson(task1.getDueDate()).get("mintue"));
 
 
-        try {
-            assertEquals(null, Jsonifier.dueDateToJson(taskNull.getDueDate()).get("mintue"));
-            fail();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            assertEquals(new JSONObject().toString(), Jsonifier.dueDateToJson(taskNull.getDueDate()));
+//            fail();
+//        } catch (NullPointerException e) {
+//        }
 
-        assertEquals(null, Jsonifier.dueDateToJson(null));
+//        assertEquals(null, Jsonifier.dueDateToJson(null));
 
 
 
@@ -127,7 +127,7 @@ public class TestJsonifier {
         Task task3 = new Task("test ## today; in progress; important");
         Task task4 = new Task("test ## today; in progress; urgent");
         Task task5 = new Task("test ## today; in progress;");
-        Task taskNull = new Task("test ##  in progress;");
+        Task taskNull = new Task("test ## ");
 
         JSONObject jDueDate = (JSONObject) Jsonifier.taskToJson(task1).get("due-date");
         JSONObject jPriority = (JSONObject) Jsonifier.taskToJson(task1).get("priority");
@@ -137,9 +137,8 @@ public class TestJsonifier {
         assertEquals("test ", Jsonifier.taskToJson(task1).get("description"));
         assertEquals(true, jPriority.get("important"));
         assertEquals("IN_PROGRESS", Jsonifier.taskToJson(task1).get("status"));
-
-
     }
+
 
     @Test
     void testTasksToJson() {
@@ -161,4 +160,31 @@ public class TestJsonifier {
 
 
     }
+
+    @Test
+    void testTaskToJsonNull() {
+////        JSONObject tagJson = new JSONObject();
+//        Task task1 = new Task("test ## today; CPSC210; CPSC310; in progress; important; urgent");
+////        Task task2 = new Task("test ## tomorrow; in progress; urgent; important;");
+//        Task task3 = new Task("test ## today; in progress; important");
+//        Task task4 = new Task("test ## today; in progress; urgent");
+//        Task task5 = new Task("test ## today; in progress;");
+        Task taskNull = new Task("## ");
+
+        JSONObject jsonObject = Jsonifier.taskToJson(taskNull);
+
+//        JSONObject jPriority = (JSONObject) Jsonifier.taskToJson(taskNull).get("priority");
+        JSONArray l = (JSONArray) Jsonifier.taskToJson(taskNull).get("tags");
+        l.length();
+
+//        assertEquals(null, jsonObject.get("due-date"));
+//        assertEquals(false, jsonObject.get("priority"));
+        assertEquals("",jsonObject.get("description"));
+        assertEquals("TODO", jsonObject.get("status"));
+
+
+
+    }
+
+
 }

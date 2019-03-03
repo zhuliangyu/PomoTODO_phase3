@@ -38,12 +38,12 @@ public class Jsonifier {
     public static JSONObject dueDateToJson(DueDate dueDate) {
         Calendar calendar = Calendar.getInstance();
 
+        JSONObject jsonObject = new JSONObject();
 
         if (dueDate == null) {
-            return null;
+            return jsonObject;
         } else {
             calendar.setTime(dueDate.getDate());
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("year", calendar.get(Calendar.YEAR));
             jsonObject.put("month", calendar.get(Calendar.MONTH));
             jsonObject.put("day", calendar.get(Calendar.DATE));
@@ -64,6 +64,7 @@ public class Jsonifier {
             arrTagsJson.put(Jsonifier.tagToJson(t));
         }
 
+
         jsonObject.put("description", task.getDescription());
         jsonObject.put("tags", arrTagsJson);
         jsonObject.put("due-date", Jsonifier.dueDateToJson(task.getDueDate()));
@@ -77,10 +78,12 @@ public class Jsonifier {
 
         JSONArray arr = new JSONArray();
 
-        for (Task t :
-                tasks) {
-            arr.put(Jsonifier.taskToJson(t));
+        if (tasks != null) {
+            for (Task t :
+                    tasks) {
+                arr.put(Jsonifier.taskToJson(t));
 
+            }
         }
 
         return arr;   // stub
