@@ -53,7 +53,7 @@ public class TestJsonifier {
     }
 
     @Test
-    void testConstruct(){
+    void testConstruct() {
         JSONObject tagJson = new JSONObject();
 
     }
@@ -103,7 +103,7 @@ public class TestJsonifier {
         assertEquals(Calendar.getInstance().get(Calendar.MONTH), Jsonifier.dueDateToJson(task1.getDueDate()).get("month"));
         assertEquals(Calendar.getInstance().get(Calendar.DATE), Jsonifier.dueDateToJson(task1.getDueDate()).get("day"));
         assertEquals(23, Jsonifier.dueDateToJson(task1.getDueDate()).get("hour"));
-        assertEquals(59, Jsonifier.dueDateToJson(task1.getDueDate()).get("mintue"));
+        assertEquals(59, Jsonifier.dueDateToJson(task1.getDueDate()).get("minute"));
 
 
 //        try {
@@ -115,9 +115,9 @@ public class TestJsonifier {
 //        assertEquals(null, Jsonifier.dueDateToJson(null));
 
 
-
-
     }
+
+
 
     @Test
     void testTaskToJson() {
@@ -128,6 +128,13 @@ public class TestJsonifier {
         Task task4 = new Task("test ## today; in progress; urgent");
         Task task5 = new Task("test ## today; in progress;");
         Task taskNull = new Task("test ## ");
+
+        Object o1 = Jsonifier.taskToJson(task1).get("description");
+        Object o2 = Jsonifier.taskToJson(task1).get("tags");
+        JSONObject o3 = (JSONObject)Jsonifier.taskToJson(task1).get("due-date");
+        o3.get("minute");
+        Object o4 = Jsonifier.taskToJson(task1).get("priority");
+        Object o5 = Jsonifier.taskToJson(task1).get("status");
 
         JSONObject jDueDate = (JSONObject) Jsonifier.taskToJson(task1).get("due-date");
         JSONObject jPriority = (JSONObject) Jsonifier.taskToJson(task1).get("priority");
@@ -141,13 +148,13 @@ public class TestJsonifier {
 
 
     @Test
-    void testTasksToJson() {
+    void testArrTasksToJson() {
 //        JSONObject tagJson = new JSONObject();
         Task task1 = new Task("test ## today; CPSC210; CPSC310; in progress; important; urgent");
 //        Task task2 = new Task("test ## tomorrow; in progress; urgent; important;");
-        Task task3 = new Task("test ## today; in progress; important");
-        Task task4 = new Task("test ## today; in progress; urgent");
-        Task task5 = new Task("test ## today; in progress;");
+        Task task3 = new Task("test ## today; up next; important");
+        Task task4 = new Task("test ## today; to do; urgent");
+        Task task5 = new Task("test ## today; done;");
         Task taskNull = new Task("test ##  in progress;");
 
         List<Task> arrTasks = new ArrayList<>();
@@ -156,7 +163,8 @@ public class TestJsonifier {
         arrTasks.add(task4);
         arrTasks.add(task5);
 
-        assertEquals(4, Jsonifier.taskListToJson(arrTasks).length());
+        JSONArray j = Jsonifier.taskListToJson(arrTasks);
+        assertEquals(4, j.length());
 
 
     }
@@ -169,7 +177,7 @@ public class TestJsonifier {
 //        Task task3 = new Task("test ## today; in progress; important");
 //        Task task4 = new Task("test ## today; in progress; urgent");
 //        Task task5 = new Task("test ## today; in progress;");
-        Task taskNull = new Task("## ");
+        Task taskNull = new Task("test ##  ");
 
         JSONObject jsonObject = Jsonifier.taskToJson(taskNull);
 
@@ -179,9 +187,18 @@ public class TestJsonifier {
 
 //        assertEquals(null, jsonObject.get("due-date"));
 //        assertEquals(false, jsonObject.get("priority"));
-        assertEquals("",jsonObject.get("description"));
-        assertEquals("TODO", jsonObject.get("status"));
 
+        assertEquals("test ", jsonObject.get("description"));
+//        assertEquals("TODO", jsonObject.get("status"));
+
+
+        Jsonifier.taskToJson(new Task("test ## today; in progress; important; urgent"));
+
+        Object o1 = Jsonifier.taskToJson(taskNull).get("description");
+        Object o2 = Jsonifier.taskToJson(taskNull).get("tags");
+        Object o3 = Jsonifier.taskToJson(taskNull).get("due-date");
+        Object o4 = Jsonifier.taskToJson(taskNull).get("priority");
+        Object o5 = Jsonifier.taskToJson(taskNull).get("status");
 
 
     }

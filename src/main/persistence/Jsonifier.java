@@ -34,7 +34,7 @@ public class Jsonifier {
 
     }
 
-    // EFFECTS: returns JSON respresentation of dueDate
+    // EFFECTS: returns JSON representation of dueDate
     public static JSONObject dueDateToJson(DueDate dueDate) {
         Calendar calendar = Calendar.getInstance();
 
@@ -48,7 +48,7 @@ public class Jsonifier {
             jsonObject.put("month", calendar.get(Calendar.MONTH));
             jsonObject.put("day", calendar.get(Calendar.DATE));
             jsonObject.put("hour", calendar.get(Calendar.HOUR_OF_DAY));
-            jsonObject.put("mintue", calendar.get(Calendar.MINUTE));
+            jsonObject.put("minute", calendar.get(Calendar.MINUTE));
             return jsonObject;
         }
 
@@ -58,18 +58,27 @@ public class Jsonifier {
     public static JSONObject taskToJson(Task task) {
 
         JSONObject jsonObject = new JSONObject();
+
         JSONArray arrTagsJson = new JSONArray();
-        for (Tag t :
-                task.getTags()) {
-            arrTagsJson.put(Jsonifier.tagToJson(t));
+
+        if (task.getTags().size() > 0) {
+            for (Tag t :
+                    task.getTags()) {
+                arrTagsJson.put(Jsonifier.tagToJson(t));
+            }
         }
 
 
         jsonObject.put("description", task.getDescription());
         jsonObject.put("tags", arrTagsJson);
-        jsonObject.put("due-date", Jsonifier.dueDateToJson(task.getDueDate()));
+        if (task.getDueDate() != null) {
+            jsonObject.put("due-date", Jsonifier.dueDateToJson(task.getDueDate()));
+        } else {
+            jsonObject.put("due-date", JSONObject.NULL);
+        }
         jsonObject.put("priority", Jsonifier.priorityToJson(task.getPriority()));
         jsonObject.put("status", task.getStatus().toString().replace(" ", "_"));
+
         return jsonObject;
     }
 
@@ -78,7 +87,7 @@ public class Jsonifier {
 
         JSONArray arr = new JSONArray();
 
-        if (tasks != null) {
+        if (tasks.size() > 0) {
             for (Task t :
                     tasks) {
                 arr.put(Jsonifier.taskToJson(t));
