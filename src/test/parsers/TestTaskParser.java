@@ -181,7 +181,7 @@ public class TestTaskParser {
                 "},{\n" +
                 "  \"description\":\"Register for the course. \",\n" +
                 "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
-                "  \"due-date\":{\"year\":19,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
+                "  \"due-date\":{\"year\":1908,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
                 "  \"priority\":{\"important\":true,\"urgent\":true},\n" +
                 "  \"status\":\"IN_PROGRESS\"\n" +
                 "},{\n" +
@@ -206,7 +206,7 @@ public class TestTaskParser {
                 "},{\n" +
                 "  \"description\":\"Register for the course. \",\n" +
                 "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
-                "  \"due-date\":{\"year\":19,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
+                "  \"due-date\":{\"year\":1908,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
                 "  \"priority\":{\"important\":true,\"urgent\":true},\n" +
                 "  \"status\":\"IN_PROGRESS\"\n" +
                 "},{\n" +
@@ -231,7 +231,7 @@ public class TestTaskParser {
                 "},{\n" +
                 "  \"description\":\"Register for the course. \",\n" +
                 "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
-                "  \"due-date\":{\"year\":19,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
+                "  \"due-date\":{\"year\":1908,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
                 "  \"priority\":{\"important\":true,\"urgent\":true},\n" +
                 "  \"status\":\"UP_NEXT\"\n" +
                 "},{\n" +
@@ -244,5 +244,46 @@ public class TestTaskParser {
         List<Task> listOfTask = tp.parse(input1);
         assertEquals(3, listOfTask.size());
     }
+
+    @Test
+    void testTaskParserW8() {
+        String input1 = "[]";
+        List<Task> listOfTask = tp.parse(input1);
+        assertEquals(0, listOfTask.size());
+    }
+
+    @Test
+    void testTaskParserW9() {
+        String input1 = "";
+        List<Task> listOfTask = tp.parse(input1);
+        assertEquals(0, listOfTask.size());
+    }
+
+    @Test
+    void testTaskParserW11() {
+        String input1 = "[{\n" +
+                "  \"description\":\"Register for the course. \",\n" +
+                "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
+                "  \"due-date\":{\"year\":2019,\"month\":12,\"day\":28,\"hour\":23,\"minute\":59},\n" +
+                "  \"priority\":{\"important\":false,\"urgent\":true},\n" +
+                "  \"status\":\"IN_PROGRESS\"\n" +
+                "},{\n" +
+                "  \"description\":\"Register for the course. \",\n" +
+                "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
+                "  \"due-date\":{\"year\":1908,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
+                "  \"priority\":{\"important\":true,\"urgent\":true},\n" +
+                "  \"status\":\"IN_PROGRESS\"\n" +
+                "},{\n" +
+                "  \"description\":\"Register for the course. \",\n" +
+                "  \"tags\":[{\"name\":\"cpsc210\"}],\n" +
+                "  \"due-date\":{\"year\":2019,\"month\":1,\"day\":16,\"hour\":23,\"minute\":59},\n" +
+                "  \"priority\":{\"important\":true,\"urgent\":true},\n" +
+                "  \"status\":\"IN_PROGRESS\"\n" +
+                "}]";
+        List<Task> listOfTask = tp.parse(input1);
+        assertEquals(3, listOfTask.size());
+    }
+
+
 
 }

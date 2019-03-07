@@ -20,7 +20,14 @@ public class TaskParser {
 
         List<Task> listTask = new ArrayList<>();
 
-        JSONArray jsonArray = new JSONArray(input);
+        JSONArray jsonArray = null;
+
+        try {
+            jsonArray = new JSONArray(input);
+        } catch (JSONException e) {
+//            e.printStackTrace();
+            return listTask;
+        }
 
         for (Object object : jsonArray) {
 
@@ -29,22 +36,7 @@ public class TaskParser {
             JSONObject taskJson = (JSONObject) object;
 
             try {
-                //set description
-                String description = (String) taskJson.get("description");
-                tk.setDescription(description);
-
-                //set due day
-                setDueDay(tk, taskJson);
-
-                //set tags
-                setTags(tk, taskJson);
-
-                //set priority
-                setPriority(tk, taskJson);
-
-                //set Status
-                setStatus(tk, taskJson);
-
+                setTask(tk, taskJson);
                 listTask.add(tk);
             } catch (JSONException e) {
 //                e.printStackTrace();
@@ -55,6 +47,24 @@ public class TaskParser {
 
         return listTask;
 
+    }
+
+    private void setTask(Task tk, JSONObject taskJson) {
+        //set description
+        String description = (String) taskJson.get("description");
+        tk.setDescription(description);
+
+        //set due day
+        setDueDay(tk, taskJson);
+
+        //set tags
+        setTags(tk, taskJson);
+
+        //set priority
+        setPriority(tk, taskJson);
+
+        //set Status
+        setStatus(tk, taskJson);
     }
 
     private void setDueDay(Task tk, JSONObject taskJson) {
@@ -129,7 +139,9 @@ public class TaskParser {
                 || (Integer) dueDateJson.get("minute") > 59
                 || (Integer) dueDateJson.get("minute") < 0
                 || (Integer) dueDateJson.get("day") > maxOfDay
-                || (Integer) dueDateJson.get("day") < 1) {
+                || (Integer) dueDateJson.get("day") < 1
+                || (Integer) dueDateJson.get("year") < 1900
+                || (Integer) dueDateJson.get("year") > 3000) {
             throw new IllegalArgumentException();
         }
     }
