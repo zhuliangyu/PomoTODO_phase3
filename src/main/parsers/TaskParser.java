@@ -2,8 +2,10 @@ package parsers;
 
 import model.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.YearMonth;
 import java.util.*;
 
 // Represents Task parser
@@ -26,29 +28,43 @@ public class TaskParser {
 
             JSONObject taskJson = (JSONObject) object;
 
-            //set description
-            String description = (String) taskJson.get("description");
-            tk.setDescription(description);
+            try {
+                //set description
+                String description = (String) taskJson.get("description");
+                tk.setDescription(description);
 
-            //set due day
-            JSONObject dueDateJson = (JSONObject) taskJson.get("due-date");
-            DueDate dd = jsonToDueDay(dueDateJson);
-            tk.setDueDate(dd);
+                //set due day
+                setDueDay(tk, taskJson);
 
-            //set tags
-            setTags(tk, taskJson);
+                //set tags
+                setTags(tk, taskJson);
 
-            //set priority
-            setPriority(tk, taskJson);
+                //set priority
+                setPriority(tk, taskJson);
 
-            //set Status
-            setStatus(tk, taskJson);
+                //set Status
+                setStatus(tk, taskJson);
 
-
-            listTask.add(tk);
+                listTask.add(tk);
+            } catch (JSONException e) {
+//                e.printStackTrace();
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
         }
 
         return listTask;
+
+    }
+
+    private void setDueDay(Task tk, JSONObject taskJson) {
+        if (taskJson.get("due-date").equals(null)) {
+            tk.setDueDate(null);
+        } else {
+            JSONObject dueDateJson = (JSONObject) taskJson.get("due-date");
+            DueDate dd = jsonToDueDay(dueDateJson);
+            tk.setDueDate(dd);
+        }
 
     }
 
@@ -73,6 +89,8 @@ public class TaskParser {
             tk.setStatus(Status.IN_PROGRESS);
         } else if (statusAfter.equalsIgnoreCase(Status.DONE.name())) {
             tk.setStatus(Status.DONE);
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -88,15 +106,32 @@ public class TaskParser {
 
     private DueDate jsonToDueDay(JSONObject dueDateJson) {
 
+        preJudgeDate(dueDateJson);
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, (Integer) dueDateJson.get("year"));
-        cal.set(Calendar.MONTH, (Integer) dueDateJson.get("month"));
+        cal.set(Calendar.MONTH, (Integer) dueDateJson.get("month") - 1);
         cal.set(Calendar.DATE, (Integer) dueDateJson.get("day"));
         cal.set(Calendar.HOUR_OF_DAY, (Integer) dueDateJson.get("hour"));
         cal.set(Calendar.MINUTE, (Integer) dueDateJson.get("minute"));
 
         Date dt = cal.getTime();
         return (new DueDate(dt));
+    }
+
+    private void preJudgeDate(JSONObject dueDateJson) {
+        Integer maxOfDay = YearMonth.of((Integer) dueDateJson.get("year"),
+                (Integer) dueDateJson.get("month")).lengthOfMonth();
+        if ((Integer) dueDateJson.get("month") < 1
+                || (Integer) dueDateJson.get("month") > 12
+                || (Integer) dueDateJson.get("hour") > 23
+                || (Integer) dueDateJson.get("hour") < 0
+                || (Integer) dueDateJson.get("minute") > 59
+                || (Integer) dueDateJson.get("minute") < 0
+                || (Integer) dueDateJson.get("day") > maxOfDay
+                || (Integer) dueDateJson.get("day") < 1) {
+            throw new IllegalArgumentException();
+        }
     }
 
 
